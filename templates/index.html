@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Real-ESRGAN Upscaler</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Bebas Neue", serif;
+            font-weight: 550;
+            font-style: normal;
+            font-size: 18px;
+            color: var(--secondary);
+        }
+
+        :root {
+            /* --primary: #FF0080; */
+            --primary: white;
+            --secondary: #000000;
+            /* --tertiary: #DC143C; */
+            --tertiary: grey;
+            --quaternary: #FFFFFF;
+            --quinary: #FF476C;
+        }
+
+        ::selection {
+            color: var(--secondary);
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+            border-radius: 50px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--quaternary);
+            border-radius: 50px;
+        }
+
+        .gradient-text {
+            color: transparent;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            background-clip: text;
+        }
+
+        .button {
+            margin: 10px auto;
+            padding: 10px 10px;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            border: none;
+            border-radius: 50px;
+            display: block;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            color: var(--secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            width: 200px;
+        }
+
+        .smallButton {
+            margin: 10px auto;
+            padding: 10px 10px;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            border: none;
+            border-radius: 50px;
+            display: block;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            color: var(--secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            width: 150px;
+            text-decoration: none;
+        }
+
+        .label {
+            font-size: 26px;
+        }
+
+        header,
+        nav {
+            text-align: center;
+        }
+
+        p#heading {
+            font-size: clamp(80px, 50px, 30px);
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--secondary);
+        }
+
+        main {
+            margin: 10px auto;
+            width: 90vw;
+            height: calc(100vh - 200px);
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .controller {
+            display: block;
+            width: 800px;
+            margin: 10px 10px;
+            height: 100%;
+            width: 400px;
+            border: 1px solid var(--primary);
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px var(--primary);
+        }
+
+        .canvas {
+            margin: 10px 10px;
+            height: 100%;
+            width: calc(100vw - 200px);
+            border: 1px solid var(--primary);
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px var(--primary);
+        }
+
+        .drop-zone {
+            width: clamp(500px, 400px, 100px);
+            aspect-ratio: 5/ 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto;
+            border: 2px dashed var(--quaternary);
+            border-radius: 15px;
+            padding: 10px 10px;
+            text-align: center;
+            cursor: pointer;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            position: relative;
+            transition: all 400ms ease-in;
+        }
+
+        .drop-zone:hover {
+            background: linear-gradient(to right, var(--tertiary), var(--primary));
+        }
+
+        .drop-zone p {
+            font-size: 26px;
+        }
+
+        .preview-grid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .select-model {
+            display: block;
+            width: 200px;
+            text-align: center;
+        }
+
+        .select-model label {
+            font-size: 24px;
+        }
+
+        .select-model {
+            margin: 10px auto;
+            padding: 10px 10px;
+        }
+
+        .select-model p {
+            font-size: 24px;
+        }
+
+        .controls {
+            margin: 65px auto;
+            display: block;
+            width: 200px;
+            text-align: center;
+        }
+
+        select {
+            width: 200px;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 10px;
+            appearance: none;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            outline: none;
+            font-size: 18px;
+        }
+
+        option {
+            background: var(--primary);
+        }
+
+        input[type="checkbox"] {
+            accent-color: var(--primary);
+            height: 30px;
+            width: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: var(--tertiary);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .buttons-container {
+            width: 100%;
+            text-align: center;
+        }
+
+        .preview-container {
+            display: flex;
+            margin: 10px 10px;
+            height: auto;
+        }
+
+        .image-section {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--primary);
+            box-shadow: 0px 0px 10px var(--primary);
+            border-radius: 5px;
+            margin: 10px 10px;
+            height: auto;
+        }
+
+        .image-section p {
+            font-size: 22px;
+        }
+
+        .preview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            height: 385px;
+            overflow-x: hidden;
+        }
+
+        .file-card {
+            width: 250px;
+            height: 350px;
+            border: 1px solid var(--primary);
+            box-shadow: 0px 0px 10px var(--primary);
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 10px;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .progress-container,
+        .total-progress-container {
+            /* Apply common container styles */
+            border: 1px solid var(--primary);
+            box-shadow: 0px 0px 10px var(--primary);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            display: none;
+            /* Keep hidden by default until processing starts */
+        }
+
+        .progress-container {
+            height: 15px;
+            /* Individual progress bar height */
+            margin-top: 10px;
+        }
+
+        .total-progress-container {
+            height: 30px;
+            /* Total progress bar height - make it taller as before */
+            width: 97%;
+            margin: 10px auto;
+        }
+
+        .progress-bar,
+        .total-progress-bar {
+            /* Apply common progress bar styles */
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after,
+        .total-progress-bar::after {
+            /* Apply common animation styling */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -200%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 25%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(255, 255, 255, 0) 75%);
+            /* animation: loading 1.5s infinite; - Animation controlled by JS class now */
+        }
+
+        .progress-text {
+            /* Keep individual progress text styles */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            /* Smaller text for individual progress */
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .total-progress-text {
+            /* Keep total progress text styles */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            /* Larger text for total progress */
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .progress-bar.animate-progress::after,
+        .total-progress-bar.animate-progress::after {
+            animation: loading 1.5s infinite;
+            /* Animation class applies to both */
+        }
+
+        .image-counter {
+            text-align: center;
+            font-size: 24px;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+
+        /* Updated progress bar styles */
+        .total-progress-container {
+            height: 30px;
+        }
+
+        /* Disabled button style */
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @keyframes loading {
+            100% {
+                left: 200%;
+            }
+        }
+
+        .checkbox-wrapper-5 {
+            width: 150px;
+        }
+
+        .checkbox-wrapper-5 p {
+            font-size: 24px;
+        }
+
+        .checkbox-wrapper-5 .check {
+            --size: 40px;
+            position: relative;
+            background: linear-gradient(90deg, var(--primary), var(--tertiary));
+            line-height: 0;
+            perspective: 400px;
+            font-size: var(--size);
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"],
+        .checkbox-wrapper-5 .check label,
+        .checkbox-wrapper-5 .check label::before,
+        .checkbox-wrapper-5 .check label::after,
+        .checkbox-wrapper-5 .check {
+            appearance: none;
+            display: inline-block;
+            border-radius: var(--size);
+            border: 0;
+            transition: .35s ease-in-out;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper-5 .check label {
+            width: calc(2.2 * var(--size));
+            height: var(--size);
+            background: #d7d7d7;
+            overflow: hidden;
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"] {
+            position: absolute;
+            z-index: 1;
+            width: calc(.8 * var(--size));
+            height: calc(.8 * var(--size));
+            top: calc(.1 * var(--size));
+            left: calc(.1 * var(--size));
+            background: linear-gradient(45deg, #dedede, #ffffff);
+            box-shadow: 0 6px 7px rgba(0, 0, 0, 0.3);
+            outline: none;
+            margin: 0;
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked {
+            left: calc(1.3 * var(--size));
+            background: var(--quinary);
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked+label {
+            background: transparent;
+        }
+
+        .checkbox-wrapper-5 .check label::before,
+        .checkbox-wrapper-5 .check label::after {
+            content: "· ·";
+            position: absolute;
+            overflow: hidden;
+            left: calc(.15 * var(--size));
+            top: calc(.5 * var(--size));
+            height: var(--size);
+            letter-spacing: calc(-0.04 * var(--size));
+            color: #9b9b9b;
+            font-family: "Times New Roman", serif;
+            z-index: 2;
+            font-size: calc(.6 * var(--size));
+            border-radius: 0;
+            transform-origin: 0 0 calc(-0.5 * var(--size));
+            backface-visibility: hidden;
+        }
+
+        .checkbox-wrapper-5 .check label::after {
+            content: "●";
+            top: calc(.65 * var(--size));
+            left: calc(.2 * var(--size));
+            height: calc(.1 * var(--size));
+            width: calc(.35 * var(--size));
+            font-size: calc(.2 * var(--size));
+            transform-origin: 0 0 calc(-0.4 * var(--size));
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked+label::before,
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked+label::after {
+            left: calc(1.55 * var(--size));
+            top: calc(.4 * var(--size));
+            line-height: calc(.1 * var(--size));
+            transform: rotateY(360deg);
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked+label::after {
+            height: calc(.16 * var(--size));
+            top: calc(.55 * var(--size));
+            left: calc(1.6 * var(--size));
+            font-size: calc(.6 * var(--size));
+            line-height: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <p id="heading" class="gradient-text">Real-ESRGAN Image Upscaler</p>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+
+            <div class="controller">
+
+                <div class="controls">
+                    <div class="checkbox-wrapper-5 controls">
+                        <label class="gradient-text label">TTA Mode</label>
+                        <div class="check">
+                            <input id="check-5" type="checkbox" name="tta">
+                            <label for="check-5"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <label class="label gradient-text">GPU</label>
+                    <select name="gpu_id">
+                        {% for gpu in gpus %}
+                        <option value="{{ gpu.name }}">{{ gpu.name }}</option>
+                        {% else %}
+                        <option value="Default GPU">Default GPU</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="controls">
+                    <label class="label gradient-text">Model</label>
+                    <select name="model">
+                        <option value="4xHFA2k">4xHFA2k</option>
+                        <option value="4xLSDIR">4xLSDIR</option>
+                        <option value="4xLSDIRplusC">4xLSDIRplusC</option>
+                        <option value="4xLSDIRCompactC3">4xLSDIRCompactC3</option>
+                        <option value="4xNomos8kSC">4xNomos8kSC</option>
+                        <option value="4x_NMKD-Siax_200k">4x_NMKD-Siax_200k</option>
+                        <option value="4x_NMKD-Superscale-SP_178000_G">4x_NMKD-Superscale-SP_178000_G</option>
+                        <option value="RealESRGAN_General_WDN_x4_v3">RealESRGAN_General_WDN_x4_v3</option>
+                        <option value="RealESRGAN_General_x4_v3">RealESRGAN_General_x4_v3</option>
+                    </select>
+                </div>
+
+                <div class="buttonContainer controls">
+                    <button class="button" onclick="location.reload()">Reload UI</button>
+                    <button class="button" onclick="clearHistory()">Clear History</button>
+                    <button class="button hidden" id="cancelBtn" onclick="cancelProcessing()">Cancel Processing</button>
+                    <button onclick="startProcessing()" class="button" id="upscaleBtn" disabled>Upscale Images</button>
+                    <button id="downloadAllBtn" class="hidden button" onclick="downloadAll()">Download All</button>
+                </div>
+
+            </div>
+
+            <div class="canvas">
+                <div class="drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                    <p>Drag and drop images here or click to upload</p>
+                    <input type="file" id="fileInput" hidden accept="image/*" multiple>
+                </div>
+
+                <p class="image-counter gradient-text" id="imageCounter">Added Images: 0</p>
+
+                <div class="total-progress-container">
+                    <div class="total-progress-bar" style="width: 0%"></div>
+                    <div class="total-progress-text">0%</div>
+                </div>
+
+                <div class="preview-container">
+                    <div class="image-section">
+                        <p class="gradient-text" id="addedImagesLabel">Added Images</p>
+                        <div class="preview-grid" id="addedImagesContainer"></div>
+                    </div>
+                    <div class="image-section">
+                        <p class="gradient-text">Processed Images</p>
+                        <div class="preview-grid" id="processedImagesContainer"></div>
+                    </div>
+                </div>
+            </div>
+    </main>
+
+    <script>
+        let currentBatchId = null;
+        const processingTasks = new Set();
+        let totalProgress = 0;
+        let totalTasks = 0;
+        const upscaleButton = document.getElementById('upscaleBtn'); // Get upscale button
+        const imageCounterLabel = document.getElementById('imageCounter'); // Get image counter label
+        const addedImagesLabelElement = document.getElementById('addedImagesLabel'); // Get 'Added Images' label
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                updatePreviews();
+            }
+        }
+
+        function updatePreviews() {
+            const container = document.getElementById('addedImagesContainer');
+            const files = fileInput.files;
+            container.innerHTML = '';
+            imageCounterLabel.textContent = `Added Images: ${files.length}`; // Update image counter
+
+            if (files.length > 0) {
+                upscaleButton.disabled = false; // Enable upscale button if images are added
+            } else {
+                upscaleButton.disabled = true;  // Disable upscale button if no images
+            }
+
+
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const card = document.createElement('div');
+                    card.className = 'file-card';
+                    card.innerHTML = `
+                    <img class="preview-image" src="${e.target.result}">
+                    <button class="smallButton" onclick="removeImage(${index})">Remove</button>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 0%"></div>
+                        <div class="progress-text">0%</div>
+                    </div>
+                `;
+                    container.appendChild(card);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removeImage(index) {
+            const dt = new DataTransfer();
+            const files = Array.from(fileInput.files);
+            files.splice(index, 1);
+            files.forEach(file => dt.items.add(file));
+            fileInput.files = dt.files;
+            updatePreviews();
+        }
+
+        function trackProgress(taskId, index) {
+            const interval = setInterval(async () => {
+                try { // Add try-catch block for error handling in fetch
+                    const response = await fetch(`/progress/${taskId}`);
+                    if (!response.ok) { // Check if response status is OK
+                        console.error(`Error fetching progress for task ${taskId}: ${response.status} ${response.statusText}`);
+                        clearInterval(interval); // Stop polling if there's an error
+                        return;
+                    }
+                    const progressData = await response.json();
+                    console.log(`Task ${taskId} progress data:`, progressData); // Log progress data
+
+                    const cards = document.getElementById('addedImagesContainer').children;
+                    if (index >= cards.length) return;
+
+                    const card = cards[index];
+                    const progressBar = card.querySelector('.progress-bar');
+                    const progressText = card.querySelector('.progress-text');
+
+                    if (progressData.status === 'processing') {
+                        const percent = progressData.progress;
+                        progressBar.style.width = `${percent}%`;
+                        progressText.textContent = `${percent}%`;
+
+                        if (percent > 0 && percent < 100) {
+                            progressBar.style.background = `linear-gradient(90deg, #FF0080 ${percent}%, #DC143C 100%)`;
+                            progressBar.classList.remove('animate-progress'); // No animation during processing
+                        }
+                    } else if (progressData.status === 'completed') {
+                        progressBar.style.width = `100%`;
+                        progressText.textContent = `100%`;
+                        progressBar.style.background = '#DC143C';
+                        progressBar.classList.add('animate-progress'); // Animate on individual completion (OPTIONAL)
+                        clearInterval(interval);
+                        processingTasks.delete(taskId);
+                        addProcessedImage(progressData);
+                    } else if (progressData.status === 'error') {
+                        progressBar.style.background = '#ff0000';
+                        progressText.textContent = 'Error';
+                        progressBar.classList.remove('animate-progress'); // No animation on error
+                        clearInterval(interval);
+                        processingTasks.delete(taskId);
+                        alert(`Error processing image: ${progressData.error}`);
+                    }
+                } catch (error) {
+                    console.error(`Fetch error for task ${taskId}:`, error);
+                    clearInterval(interval); // Stop polling on fetch error
+                }
+            }, 300); // Reduced interval to 300ms for more frequent updates - adjust if needed
+        }
+
+        async function trackTotalProgress(batchId) {
+            const interval = setInterval(async () => {
+                try { // Add try-catch block for error handling in fetch
+                    const response = await fetch(`/batch_progress/${batchId}`); // NEW SERVER ENDPOINT NEEDED
+                    if (!response.ok) { // Check if response status is OK
+                        console.error(`Error fetching total progress for batch ${batchId}: ${response.status} ${response.statusText}`);
+                        clearInterval(interval); // Stop polling if there's an error
+                        return;
+                    }
+
+                    const progressData = await response.json();
+                    console.log(`Batch ${batchId} total progress data:`, progressData); // Log total progress data
+
+                    const totalProgressBar = document.querySelector('.total-progress-bar');
+                    const totalProgressText = document.querySelector('.total-progress-text');
+
+                    if (progressData.status === 'processing') {
+                        const percent = progressData.progress;
+                        totalProgressBar.style.width = `${percent}%`;
+                        totalProgressText.textContent = `${percent}%`;
+
+                        if (percent > 0 && percent < 100) {
+                            totalProgressBar.style.background = `linear-gradient(90deg, #FF0080 ${percent}%, #DC143C 100%)`;
+                            totalProgressBar.classList.remove('animate-progress'); // No animation during processing
+                        }
+                    } else if (progressData.status === 'completed') {
+                        totalProgressBar.style.width = `100%`;
+                        totalProgressText.textContent = `100%`;
+                        totalProgressBar.style.background = '#DC143C';
+                        totalProgressBar.classList.add('animate-progress'); // Animate on total completion
+                        clearInterval(interval);
+                        document.getElementById('cancelBtn').classList.add('hidden'); // Hide cancel button when done
+                        if (fileInput.files.length > 1) {
+                            document.getElementById('downloadAllBtn').classList.remove('hidden'); // Show download all if multiple files
+                        }
+
+                    } else if (progressData.status === 'error') {
+                        totalProgressBar.style.background = '#ff0000';
+                        totalProgressText.textContent = 'Error';
+                        totalProgressBar.classList.remove('animate-progress'); // No animation on error
+                        clearInterval(interval);
+                        alert(`Batch Error: ${progressData.error}`);
+                        document.getElementById('cancelBtn').classList.add('hidden'); // Hide cancel button on error
+                    }
+                } catch (error) {
+                    console.error(`Fetch error for batch progress ${batchId}:`, error);
+                    clearInterval(interval); // Stop polling on fetch error
+                }
+            }, 300);
+        }
+
+
+        async function startProcessing() {
+            const files = fileInput.files;
+            if (files.length === 0) {
+                alert("Please add images before upscaling."); // Alert if no images are added, although button should be disabled
+                return;
+            }
+
+            addedImagesLabelElement.textContent = 'Uploaded Images'; // Change "Added Images" to "Uploaded Images"
+            document.querySelector('.drop-zone').classList.add('hidden');
+            document.querySelector('button[onclick="startProcessing()"]').classList.add('hidden');
+            document.getElementById('cancelBtn').classList.remove('hidden');
+            document.querySelector('.total-progress-container').style.display = 'block';
+            document.querySelectorAll('.progress-container').forEach(container => {
+                container.style.display = 'block';
+            });
+            document.querySelectorAll('.preview-grid').forEach(container => {
+                container.style.height = '580px';
+            });
+
+            // Reset progress values
+            totalProgress = 0;
+            totalTasks = files.length;
+
+            const formData = new FormData();
+            Array.from(files).forEach(file => formData.append('files', file));
+            formData.append('model', document.querySelector('[name="model"]').value);
+            formData.append('gpu_id', document.querySelector('[name="gpu_id"]').value);
+            if (document.querySelector('[name="tta"]').checked) formData.append('tta', 'on');
+
+            try {
+                const response = await fetch('/process', { method: 'POST', body: formData });
+                if (!response.ok) { // Check if response status is OK for initial process request
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                currentBatchId = data.batch_id;
+                totalTasks = data.task_ids.length;
+
+                data.task_ids.forEach((taskId, index) => {
+                    processingTasks.add(taskId);
+                    trackProgress(taskId, index);
+                });
+
+                // Start tracking total progress periodically
+                trackTotalProgress(currentBatchId); // Call new function to track total progress
+
+            } catch (error) {
+                console.error("Error starting processing:", error);
+                alert("Failed to start processing. See console for details."); // User-friendly error message
+                // Optionally reset UI elements here if processing fails to start
+                addedImagesLabelElement.textContent = 'Added Images'; // Revert label in case of error
+                document.querySelector('.drop-zone').classList.remove('hidden');
+                document.querySelector('button[onclick="startProcessing()"]').classList.remove('hidden');
+                document.getElementById('cancelBtn').classList.add('hidden');
+                document.querySelector('.total-progress-container').style.display = 'none';
+                document.querySelectorAll('.progress-container').forEach(container => {
+                    container.style.display = 'none';
+                });
+                document.querySelectorAll('.preview-grid').forEach(container => {
+                    container.style.height = '400px'; // Reset preview grid height
+                });
+            }
+        }
+
+        function addProcessedImage(data) {
+            const container = document.getElementById('processedImagesContainer');
+            const card = document.createElement('div');
+            card.className = 'file-card';
+            card.innerHTML = `
+                <img class="preview-image" src="/processed/${data.output_filename}">
+                <div class="button-group">
+                    <a class="smallButton" href="/processed/${data.output_filename}" download>Download</a>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+
+        async function cancelProcessing() {
+            processingTasks.forEach(taskId => {
+                fetch('/cancel_processing', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ task_id: taskId })
+                });
+            });
+            processingTasks.clear();
+            location.reload();
+
+            document.querySelector('.total-progress-bar').style.width = '0%';
+            document.querySelector('.total-progress-text').textContent = '0%';
+            document.querySelector('.total-progress-container').style.display = 'none';
+        }
+
+        async function clearHistory() {
+            await fetch('/clear_history', { method: 'POST' });
+            location.reload();
+        }
+
+        function downloadAll() {
+            if (currentBatchId) window.location.href = `/download_all/${currentBatchId}`;
+        }
+
+        // Event listeners
+        document.querySelector('.drop-zone').addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', updatePreviews);
+
+        // Initialize upscale button state on page load
+        updatePreviews();
+    </script>
+</body>
+
+</html>

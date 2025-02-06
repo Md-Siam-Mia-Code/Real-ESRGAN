@@ -1,0 +1,46 @@
+
+.preview-container {
+    display: flex;
+    margin: 10px 10px;
+}
+
+.image-section {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--quaternary);
+    border-radius: 5px;
+    margin: 10px 10px;
+}
+
+.image-section p {
+    font-size: 22px;
+}
+
+.preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.file-card {
+    position: relative;
+    width: 200px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.preview-image {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.progress-container {
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+}
