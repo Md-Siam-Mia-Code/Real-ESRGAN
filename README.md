@@ -1,11 +1,5 @@
 # <p align="center"><div class="gradient-text" style="font-size: 60px;">Real-ESRGAN WebUI Upscaler</div></p>
 
-<p align="center">
-  <a href="https://github.com/Md-Siam-Mia/Real-ESRGAN" target="_blank">
-    <img src="assets/ui.png alt="Project Screenshot" width="600px">
-  </a>
-</p>
-
 <br/>
 
 ## Overview
