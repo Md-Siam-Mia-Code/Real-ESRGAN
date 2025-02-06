@@ -2,19 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/Md-Siam-Mia/Real-ESRGAN" target="_blank">
-    <img src="./assets/ui.png alt="Project Screenshot" width="600px">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/Md-Siam-Mia-Code/Real-ESRGAN/releases" target="_blank">
-    <img src="[https://img.shields.io/github/v/release/Md-Siam-Mia/Real-ESRGAN](https://github.com/Md-Siam-Mia-Code/Real-ESRGAN/releases/)?style=for-the-badge" alt="GitHub release">
-  </a>
-  <a href="https://github.com/Md-Siam-Mia-Code/Real-ESRGAN/issues" target="_blank">
-    <img src="[https://img.shields.io/github/issues/Md-Siam-Mia/Real-ESRGAN](https://github.com/Md-Siam-Mia-Code/Real-ESRGAN/issues)?style=for-the-badge" alt="GitHub issues">
-  </a>
-  <a href="https://github.com/Md-Siam-Mia-Code/Real-ESRGAN/blob/main/LICENSE" target="_blank">
-    <img src="[https://img.shields.io/github/license/Md-Siam-Mia/Real-ESRGAN](https://github.com/Md-Siam-Mia-Code/Real-ESRGAN/LICENSE)?style=for-the-badge" alt="License">
+    <img src="assets/ui.png alt="Project Screenshot" width="600px">
   </a>
 </p>
 
