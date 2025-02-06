@@ -1,0 +1,479 @@
+ @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Bebas Neue", serif;
+            font-weight: 550;
+            font-style: normal;
+            font-size: 18px;
+            color: var(--secondary);
+        }
+
+        :root {
+            /* --primary: #FF0080; */
+            --primary: white;
+            --secondary: #000000;
+            /* --tertiary: #DC143C; */
+            --tertiary: grey;
+            --quaternary: #FFFFFF;
+            --quinary: #FF476C;
+        }
+
+        ::selection {
+            color: var(--secondary);
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+            border-radius: 50px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--quaternary);
+            border-radius: 50px;
+        }
+
+        .gradient-text {
+            color: transparent;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            background-clip: text;
+        }
+
+        .button {
+            margin: 10px auto;
+            padding: 10px 10px;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            border: none;
+            border-radius: 50px;
+            display: block;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            color: var(--secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            width: 200px;
+        }
+
+        .smallButton {
+            margin: 10px auto;
+            padding: 10px 10px;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            border: none;
+            border-radius: 50px;
+            display: block;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            color: var(--secondary);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            width: 150px;
+            text-decoration: none;
+        }
+
+        .label {
+            font-size: 26px;
+        }
+
+        header,
+        nav {
+            text-align: center;
+        }
+
+        p#heading {
+            font-size: clamp(80px, 50px, 30px);
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--secondary);
+        }
+
+        main {
+            margin: 10px auto;
+            width: 90vw;
+            height: calc(100vh - 200px);
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .controller {
+            display: block;
+            width: 800px;
+            margin: 10px 10px;
+            height: 100%;
+            width: 400px;
+            border: 1px solid var(--primary);
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px var(--primary);
+        }
+
+        .canvas {
+            margin: 10px 10px;
+            height: 100%;
+            width: calc(100vw - 200px);
+            border: 1px solid var(--primary);
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px var(--primary);
+        }
+
+        .drop-zone {
+            width: clamp(500px, 400px, 100px);
+            aspect-ratio: 5/ 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto;
+            border: 2px dashed var(--quaternary);
+            border-radius: 15px;
+            padding: 10px 10px;
+            text-align: center;
+            cursor: pointer;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            position: relative;
+            transition: all 400ms ease-in;
+        }
+
+        .drop-zone:hover {
+            background: linear-gradient(to right, var(--tertiary), var(--primary));
+        }
+
+        .drop-zone p {
+            font-size: 26px;
+        }
+
+        .preview-grid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .select-model {
+            display: block;
+            width: 200px;
+            text-align: center;
+        }
+
+        .select-model label {
+            font-size: 24px;
+        }
+
+        .select-model {
+            margin: 10px auto;
+            padding: 10px 10px;
+        }
+
+        .select-model p {
+            font-size: 24px;
+        }
+
+        .controls {
+            margin: 65px auto;
+            display: block;
+            width: 200px;
+            text-align: center;
+        }
+
+        select {
+            width: 200px;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 10px;
+            appearance: none;
+            background: linear-gradient(to right, var(--primary), var(--tertiary));
+            outline: none;
+            font-size: 18px;
+        }
+
+        option {
+            background: var(--primary);
+        }
+
+        input[type="checkbox"] {
+            accent-color: var(--primary);
+            height: 30px;
+            width: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            color: var(--tertiary);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .buttons-container {
+            width: 100%;
+            text-align: center;
+        }
+
+        .preview-container {
+            display: flex;
+            margin: 10px 10px;
+            height: auto;
+        }
+
+        .image-section {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--primary);
+            box-shadow: 0px 0px 10px var(--primary);
+            border-radius: 5px;
+            margin: 10px 10px;
+            height: auto;
+        }
+
+        .image-section p {
+            font-size: 22px;
+        }
+
+        .preview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            height: 385px;
+            overflow-x: hidden;
+        }
+
+        .file-card {
+            width: 250px;
+            height: 350px;
+            border: 1px solid var(--primary);
+            box-shadow: 0px 0px 10px var(--primary);
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 10px;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .progress-container,
+        .total-progress-container {
+            /* Apply common container styles */
+            border: 1px solid var(--primary);
+            box-shadow: 0px 0px 10px var(--primary);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            display: none;
+            /* Keep hidden by default until processing starts */
+        }
+
+        .progress-container {
+            height: 15px;
+            /* Individual progress bar height */
+            margin-top: 10px;
+        }
+
+        .total-progress-container {
+            height: 30px;
+            /* Total progress bar height - make it taller as before */
+            width: 97%;
+            margin: 10px auto;
+        }
+
+        .progress-bar,
+        .total-progress-bar {
+            /* Apply common progress bar styles */
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after,
+        .total-progress-bar::after {
+            /* Apply common animation styling */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -200%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 25%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    rgba(255, 255, 255, 0) 75%);
+            /* animation: loading 1.5s infinite; - Animation controlled by JS class now */
+        }
+
+        .progress-text {
+            /* Keep individual progress text styles */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            /* Smaller text for individual progress */
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .total-progress-text {
+            /* Keep total progress text styles */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            /* Larger text for total progress */
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .progress-bar.animate-progress::after,
+        .total-progress-bar.animate-progress::after {
+            animation: loading 1.5s infinite;
+            /* Animation class applies to both */
+        }
+
+        .image-counter {
+            text-align: center;
+            font-size: 24px;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+
+        /* Updated progress bar styles */
+        .total-progress-container {
+            height: 30px;
+        }
+
+        /* Disabled button style */
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @keyframes loading {
+            100% {
+                left: 200%;
+            }
+        }
+
+        .checkbox-wrapper-5 {
+            width: 150px;
+        }
+
+        .checkbox-wrapper-5 p {
+            font-size: 24px;
+        }
+
+        .checkbox-wrapper-5 .check {
+            --size: 40px;
+            position: relative;
+            background: linear-gradient(90deg, var(--primary), var(--tertiary));
+            line-height: 0;
+            perspective: 400px;
+            font-size: var(--size);
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"],
+        .checkbox-wrapper-5 .check label,
+        .checkbox-wrapper-5 .check label::before,
+        .checkbox-wrapper-5 .check label::after,
+        .checkbox-wrapper-5 .check {
+            appearance: none;
+            display: inline-block;
+            border-radius: var(--size);
+            border: 0;
+            transition: .35s ease-in-out;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper-5 .check label {
+            width: calc(2.2 * var(--size));
+            height: var(--size);
+            background: #d7d7d7;
+            overflow: hidden;
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"] {
+            position: absolute;
+            z-index: 1;
+            width: calc(.8 * var(--size));
+            height: calc(.8 * var(--size));
+            top: calc(.1 * var(--size));
+            left: calc(.1 * var(--size));
+            background: linear-gradient(45deg, #dedede, #ffffff);
+            box-shadow: 0 6px 7px rgba(0, 0, 0, 0.3);
+            outline: none;
+            margin: 0;
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked {
+            left: calc(1.3 * var(--size));
+            background: var(--quinary);
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked+label {
+            background: transparent;
+        }
+
+        .checkbox-wrapper-5 .check label::before,
+        .checkbox-wrapper-5 .check label::after {
+            content: "· ·";
+            position: absolute;
+            overflow: hidden;
+            left: calc(.15 * var(--size));
+            top: calc(.5 * var(--size));
+            height: var(--size);
+            letter-spacing: calc(-0.04 * var(--size));
+            color: #9b9b9b;
+            font-family: "Times New Roman", serif;
+            z-index: 2;
+            font-size: calc(.6 * var(--size));
+            border-radius: 0;
+            transform-origin: 0 0 calc(-0.5 * var(--size));
+            backface-visibility: hidden;
+        }
+
+        .checkbox-wrapper-5 .check label::after {
+            content: "●";
+            top: calc(.65 * var(--size));
+            left: calc(.2 * var(--size));
+            height: calc(.1 * var(--size));
+            width: calc(.35 * var(--size));
+            font-size: calc(.2 * var(--size));
+            transform-origin: 0 0 calc(-0.4 * var(--size));
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked+label::before,
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked+label::after {
+            left: calc(1.55 * var(--size));
+            top: calc(.4 * var(--size));
+            line-height: calc(.1 * var(--size));
+            transform: rotateY(360deg);
+        }
+
+        .checkbox-wrapper-5 .check input[type="checkbox"]:checked+label::after {
+            height: calc(.16 * var(--size));
+            top: calc(.55 * var(--size));
+            left: calc(1.6 * var(--size));
+            font-size: calc(.6 * var(--size));
+            line-height: 0;
+        }
