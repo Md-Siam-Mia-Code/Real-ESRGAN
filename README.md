@@ -48,7 +48,7 @@ Before proceeding with the installation, ensure you have the following installed
 
     ```bash
     git clone [https://github.com/Md-Siam-Mia/Real-ESRGAN.git](https://github.com/Md-Siam-Mia/Real-ESRGAN.git)
-    cd your-repo-name
+    cd Real-ESRGAN
     ```
 
     Alternatively, you can download the repository as a ZIP file from GitHub and extract it to your desired directory.
