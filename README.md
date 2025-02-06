@@ -144,7 +144,7 @@ The main executables are provided by a open source project named Real-ESRGAN by 
 
 ## Author
 
-[Md. Siam Mia] - [[Your GitHub Profile Link](https://github.com/Md-Siam-Mia/Real-ESRGAN.git)] - [mdsiammia.main@gmail.com]
+Md. Siam Mia - (https://github.com/Md-Siam-Mia/Real-ESRGAN.git) - [mdsiammia.main@gmail.com]
 
 ---
 
